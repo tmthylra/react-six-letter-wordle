@@ -74,6 +74,7 @@ function App() {
         setRemainingGuesses(remainingGuesses - 1);
         if (remainingGuesses === 1) {
           setGameStatus("lost");
+          setShowWinScreen(true);
         }
         setLetterStatus({ ...letterStatus, ...letters });
       } else {
@@ -104,7 +105,11 @@ function App() {
         letterStatus={letterStatus}
         gameStatus={gameStatus}  
       />
-      <WinScreen onClick={() => setShowWinScreen(false)} show={showWinScreen} />
+      <WinScreen 
+        onClick={() => setShowWinScreen(false)}
+        show={showWinScreen}
+        gameStatus={gameStatus}
+      />
     </div>
   );
 }

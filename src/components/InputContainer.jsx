@@ -9,9 +9,9 @@ function InputContainer({ onClick, letterStatus, gameStatus }) {
 
   
   return (
-    <div className="input-container">
+    <div className="flex items-center flex-col gap-2">
         {rows.map((row, index) => 
-            <div key={index} className="row">
+            <div key={index} className="flex flex-row items-center justify-center gap-2">
                 {row.map((letter) => {
                   let className = '';
                   if(letterStatus[letter.toLowerCase()] === 'correct') {
@@ -25,7 +25,7 @@ function InputContainer({ onClick, letterStatus, gameStatus }) {
                     <button 
                         key={letter}
                         onClick={() => onClick(letter)}
-                        className={`letter-button ${className}`}
+                        className={`w-12 h-12 flex items-center justify-center text-xl font-semibold border-2 rounded ${className}`}
                         disabled={gameStatus === 'won' || gameStatus === 'lost'}
                     >
                         {letter}
