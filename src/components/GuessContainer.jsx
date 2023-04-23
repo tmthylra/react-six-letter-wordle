@@ -34,7 +34,7 @@ function GuessContainer({ guesses, currentGuess, gameStatus }) {
   let input = <div className="flex items-center justify-center gap-2">
     {Array.from({ length: 6 }, (_, rowIndex) => (
     <div 
-      className="w-12 h-12 flex items-center justify-center text-xl font-semibold bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded" 
+      className="w-12 h-12 flex items-center justify-center text-xl font-semibold bg-white border-2 border-gray-300 rounded" 
       key={rowIndex}
       >
       {letters[rowIndex]}

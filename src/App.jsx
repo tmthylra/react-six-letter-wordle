@@ -91,7 +91,7 @@ function App() {
   };
 
   return (
-    <div className="App flex flex-col items-center justify-center">
+    <div className="app min-h-screen container mx-auto flex flex-col items-center justify-center p-4 md:p-8 lg:p-12 w-full md:w-3/4 lg:w-1/2">
       <div className="pb-12">
         <h1 className="pb-4">Six-Letter Wordle</h1>
         <Toaster />
@@ -103,7 +103,7 @@ function App() {
       <InputContainer 
         onClick={handleGuess}  
         letterStatus={letterStatus}
-        gameStatus={gameStatus}  
+        gameStatus={gameStatus}
       />
       <WinScreen 
         onClick={() => setShowWinScreen(false)}
