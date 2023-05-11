@@ -4,7 +4,6 @@ import GuessContainer from "./components/GuessContainer";
 import InputContainer from "./components/InputContainer";
 import WinScreen from "./components/WinScreen";
 import { getRandomWord, checkGuess } from "./utils";
-import "./App.css";
 
 function App() {
   const [wordList, setWordList] = useState(null);
@@ -51,26 +50,37 @@ function App() {
         setTargetWord(getRandomWord(data));
       })
       .catch((err) => console.error(err));
-  }, []);
 
-  const handleGuess = (guess) => {
+    window.addEventListener("keyup", handleKeyboardInput);
+
+    return () => {
+      window.removeEventListener("keyup", handleKeyboardInput);
+    };
+  }, [currentGuess]);
+
+  const handleGuess = (guess, currentGuess) => {
     if (guess.toLowerCase() === "enter") {
       const enteredGuess = currentGuess.toLowerCase();
       // Validate the guess
       if (!wordList.includes(enteredGuess)) {
         toast.error("Not a word!", { duration: 2000 });
-        setCurrentGuess('');
+        setCurrentGuess("");
         return;
-      } else if (guesses.filter((guess) => guess.guess === currentGuess).length > 0) {
+      } else if (
+        guesses.filter((guess) => guess.guess === currentGuess).length > 0
+      ) {
         toast.error("Already guessed!", { duration: 2000 });
-        setCurrentGuess('');
+        setCurrentGuess("");
         return;
       }
 
       // Check the guess
       const { result, letters } = checkGuess(targetWord, enteredGuess);
       setGuesses([...guesses, { guess: currentGuess, result }]);
-      if ( result.includes("incorrect") || result.includes("partially-correct") ) {
+      if (
+        result.includes("incorrect") ||
+        result.includes("partially-correct")
+      ) {
         setRemainingGuesses(remainingGuesses - 1);
         if (remainingGuesses === 1) {
           setGameStatus("lost");
@@ -81,31 +91,42 @@ function App() {
         setGameStatus("won");
         setShowWinScreen(true);
       }
-      setCurrentGuess('');
-    } else if (guess.toLowerCase() === "delete") {
+      setCurrentGuess("");
+    } else if (
+      guess.toLowerCase() === "delete" ||
+      guess.toLowerCase() === "backspace"
+    ) {
       setCurrentGuess(currentGuess.slice(0, -1));
     } else {
       if (currentGuess.length < 6) setCurrentGuess(currentGuess + guess);
     }
-    
+  };
+
+  const handleKeyboardInput = (event) => {
+    const letter = event.key.toUpperCase();
+    if (gameStatus === "won" || gameStatus === "lost") return;
+    else if (
+      letter.match(/^[A-Z]$/) ||
+      letter === "BACKSPACE" ||
+      letter === "ENTER"
+    )
+      handleGuess(letter, currentGuess);
   };
 
   return (
-    <div className="app min-h-screen container mx-auto flex flex-col items-center justify-center p-4 md:p-8 lg:p-12 w-full md:w-3/4 lg:w-1/2">
+    <div className="h-screen overflow-hidden container mx-auto flex flex-col items-center justify-center md:p-8 lg:p-12 w-full md:w-3/4 lg:w-1/2">
       <div className="pb-12">
-        <h1 className="pb-4">Six-Letter Wordle</h1>
+        <h1 className="pb-4 text-5xl">Six-Letter Wordle</h1>
         <Toaster />
-        <GuessContainer
-          guesses={guesses}
-          currentGuess={currentGuess}
-        />
+        <GuessContainer guesses={guesses} currentGuess={currentGuess} />
       </div>
-      <InputContainer 
-        onClick={handleGuess}  
+      <InputContainer
+        onClick={handleGuess}
         letterStatus={letterStatus}
         gameStatus={gameStatus}
+        currentGuess={currentGuess}
       />
-      <WinScreen 
+      <WinScreen
         onClick={() => setShowWinScreen(false)}
         show={showWinScreen}
         gameStatus={gameStatus}
